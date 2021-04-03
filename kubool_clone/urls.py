@@ -11,7 +11,7 @@ schema_view = get_schema_view(
    openapi.Info(
       title="Kubool Clone API",
       default_version='v1',
-      description="Test description",
+      description="Kubool is an anonymous messaging platform that allows you to give honest feedback and compliments.",
       terms_of_service="https://www.google.com/policies/terms/",
       contact=openapi.Contact(email="contact@snippets.local"),
       license=openapi.License(name="BSD License"),
