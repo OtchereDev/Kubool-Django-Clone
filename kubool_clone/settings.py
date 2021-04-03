@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'drf_yasg',
     'api',
     'messaging'
 ]
@@ -134,5 +135,17 @@ REST_FRAMEWORK = {
         
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
-    
+
+}
+
+
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH':False,
+   'SECURITY_DEFINITIONS': {
+      'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+      }
+   }
 }
