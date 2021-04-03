@@ -6,8 +6,37 @@ from .serializers import MessageSerializer
 from rest_framework.views import APIView
 from rest_framework.exceptions import NotFound, ParseError
 from rest_framework.response import Response
+from rest_framework import serializers
 
 from django.contrib.auth.password_validation import validate_password
+from django.db.utils import IntegrityError
+
+class SignUp(APIView):
+    ''' For Sign up user '''
+    def post(self,request,*args, **kwargs):
+        try:
+            username=request.data['username']
+            password=request.data['password']
+
+            validate_password(password=password)
+
+            user = CustomUser.objects.create_user(username=username,password=password)
+
+            return Response({'status':'created'})
+
+        except KeyError:
+            raise ParseError({"username":"provide a valid user name",
+                             "password":"provide a valid password"})
+
+        except ValidationError as e:
+            raise ParseError({'validation_error':list(e)})
+
+        except IntegrityError:
+            raise serializers.ValidationError({'username':"user with this user name already exists"})
+        
+        except Exception as ex:
+            raise serializers.ValidationError('cant completed this')
+
 
 
 class CheckUser(APIView):
