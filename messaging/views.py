@@ -25,7 +25,7 @@ class NewMessage(APIView):
 
             user.messages.add(new_message)
 
-            deleteMessageTask.apply_async((new_message.id,),eta=new_message.created+timedelta(minutes=5))
+            deleteMessageTask.apply_async((new_message.id,),eta=new_message.created+timedelta(hours=23))
             
         except KeyError:
             raise ParseError(detail='You must provide a message in the key "message"')
