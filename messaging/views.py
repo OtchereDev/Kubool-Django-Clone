@@ -1,3 +1,33 @@
-from django.shortcuts import render
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.exceptions import ParseError,NotFound
+from rest_framework.permissions import AllowAny
 
-# Create your views here.
+from messaging.models import Message
+from api.models import CustomUser
+
+
+# for accepting new messages 
+class NewMessage(APIView):
+    permission_classes=[AllowAny,]
+
+    def post(self,request,*args, **kwargs):
+        
+        try:
+            user_code=kwargs['message']
+            user=CustomUser.objects.get(share_code=user_code)
+            message= request.data['message']
+
+            new_message=Message.objects.create(content=message)
+
+            user.messages.add(new_message)
+            
+        except KeyError:
+            raise ParseError(detail='You must provide a message in the key "message"')
+
+        except CustomUser.DoesNotExist:
+            raise NotFound(detail="No user with this user code exists")
+            
+
+        return Response({'status':'saved'})
+
