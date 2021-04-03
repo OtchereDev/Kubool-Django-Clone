@@ -1,14 +1,14 @@
-from django.core.exceptions import ValidationError
-from rest_framework.permissions import IsAuthenticated
 from api.models import CustomUser
 from .serializers import MessageSerializer
 
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.exceptions import NotFound, ParseError
 from rest_framework.response import Response
 from rest_framework import serializers
 
-from django.contrib.auth.password_validation import password_changed, validate_password
+from django.core.exceptions import ValidationError
+from django.contrib.auth.password_validation import  validate_password
 from django.db.utils import IntegrityError
 
 class SignUp(APIView):
@@ -39,6 +39,7 @@ class SignUp(APIView):
 
 
 class ChangePassword(APIView):
+    """ For Changing user password """
     permission_classes=[IsAuthenticated]
     def post(self,request,*args, **kwargs):
         user=request.user 
@@ -57,6 +58,17 @@ class ChangePassword(APIView):
 
         except ValidationError as e:
             raise ParseError({'validation_error':list(e)})
+
+
+class DeleteUser(APIView):
+    """ For deleting User account"""
+    permission_classes=[IsAuthenticated]
+
+    def post(self,request,*args, **kwargs):
+        user=request.user 
+        user.delete()
+
+        return Response({'status':"user deleted"})
 
 
 class CheckUser(APIView):
