@@ -8,7 +8,7 @@ from rest_framework.exceptions import NotFound, ParseError
 from rest_framework.response import Response
 from rest_framework import serializers
 
-from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth.password_validation import password_changed, validate_password
 from django.db.utils import IntegrityError
 
 class SignUp(APIView):
@@ -22,7 +22,7 @@ class SignUp(APIView):
 
             user = CustomUser.objects.create_user(username=username,password=password)
 
-            return Response({'status':'created'})
+            return Response({'status':'user created'})
 
         except KeyError:
             raise ParseError({"username":"provide a valid user name",
@@ -38,6 +38,26 @@ class SignUp(APIView):
             raise serializers.ValidationError('cant completed this')
 
 
+class ChangePassword(APIView):
+    permission_classes=[IsAuthenticated]
+    def post(self,request,*args, **kwargs):
+        user=request.user 
+        try:
+            password=request.data['password']
+
+            validate_password(password)
+
+            user.set_password(password)
+            user.save()
+
+            return Response({'status':'user updated'})
+
+        except KeyError:
+            raise ParseError({"password":"provide a valid password"})
+
+        except ValidationError as e:
+            raise ParseError({'validation_error':list(e)})
+
 
 class CheckUser(APIView):
     """ view for verifying if user or not """
@@ -49,7 +69,6 @@ class CheckUser(APIView):
             raise NotFound(detail="Sorry not user with this user code exits")
         
         return Response({'status':'user exists'})
-
 
 
 class AllAnonMessages(APIView):
