@@ -127,8 +127,8 @@ STATIC_URL = '/static/'
 AUTH_USER_MODEL='api.CustomUser'
 
 
-HOST_URL='http://localhost:8000'
 
+# rest framework settings
 REST_FRAMEWORK = {
     
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -138,7 +138,7 @@ REST_FRAMEWORK = {
 
 }
 
-
+# swagger docs settings
 SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH':False,
    'SECURITY_DEFINITIONS': {
