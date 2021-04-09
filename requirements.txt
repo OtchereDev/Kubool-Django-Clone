@@ -1,0 +1,10 @@
+django
+django_restframework
+django-cors-headers
+drf-yasg
+gunicorn 
+whitenoise 
+dj-database-url 
+psycopg2
+celery
+redis
