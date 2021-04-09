@@ -1,0 +1,1 @@
+web: gunicorn kubool_clone.wsgi --log-file -
