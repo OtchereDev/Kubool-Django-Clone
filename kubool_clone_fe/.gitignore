@@ -2,7 +2,7 @@
 node_modules
 /dist
 
-
+tailwind.config_full.js
 # local env files
 .env.local
 .env.*.local
