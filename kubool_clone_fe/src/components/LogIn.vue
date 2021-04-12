@@ -20,8 +20,11 @@
             <input v-model="password" type="password" id="password" placeholder="Enter your password" autocomplete='off' class="block w-full bg-transparent py-3 px-2 placeholder-gray-400 outline-none border-b-2 font-medium text-gray-100 text-lg border-gray-50 tracking-wide focus:border-gray-400 transition-colors duration-500" >
         </div>
         <div class="text-center my-10">
-            <button class="flex w-full rounded-3xl py-4 text-center justify-center items-center bg-custome_bg text-gray-100 text-lg focus:outline-none">
-                <span class="mr-2 font-medium">Log in</span><ion-icon class="text-2xl font-medium" name="log-in-outline"></ion-icon>
+            <button ref="btn" class="flex w-full rounded-3xl py-4 text-center justify-center items-center bg-custome_bg text-gray-100 text-lg focus:outline-none">
+                <span v-if="!requesting" class="mr-2 font-medium">Log in</span><ion-icon v-if="!requesting" class="text-2xl font-medium" name="log-in-outline"></ion-icon>
+                 <span v-if="requesting">
+                    Please Wait...
+                </span>
             </button>
         </div>
       </form>
@@ -36,6 +39,9 @@ export default {
          const username= ref('')
         const password=ref('')
 
+        const requesting=ref(false)
+        const btn=ref(null)
+
         const {error,login}=handleLogin()
 
         const router= useRouter()
@@ -44,6 +50,8 @@ export default {
 
             if(username.value.length && password.value.length){
                 error.value=null
+                requesting.value=true
+                btn.value.style.disabled=true
                 const res= await login({username:username.value,password:password.value})
 
                 if(!error.value){
@@ -51,12 +59,14 @@ export default {
                     localStorage.setItem('refresh_key',res.refresh)
                     router.push('/')
                 }
+                requesting.value=false
+                btn.value.style.disabled=false
             }else{
                 error.value='Please complete the form'
             }
         }
 
-        return {username,password,error,handleSubmit}
+        return {username,password,error,handleSubmit,requesting,btn}
     }
 }
 </script>
