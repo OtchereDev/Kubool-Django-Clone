@@ -1,6 +1,6 @@
 <template>
       <div class="min-h-screen bg-custome_bg bg-cover bg-no-repeat py-20 font-custom_font">
-            <div class="mx-auto w-11/12 md:w-5/12 bg-custom_blue py-20 rounded-xl px-16">
+            <div class="mx-auto w-11/12 md:w-8/12 lg:w-5/12 bg-custom_blue py-20 rounded-xl px-8 md:px-10 lg:px-16">
 
                 <h2 class="text-center  font-bold text-gray-50 text-4xl tracking-wide">
                     Contact Me
