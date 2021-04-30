@@ -25,17 +25,17 @@ class SignUp(APIView):
             return Response({'status':'user created'})
 
         except KeyError:
-            raise ParseError({"username":"provide a valid user name",
-                             "password":"provide a valid password"})
+            raise ParseError({"field_not_provided":["provide a valid user name",
+                             "provide a valid password"]})
 
         except ValidationError as e:
             raise ParseError({'validation_error':list(e)})
 
         except IntegrityError:
-            raise serializers.ValidationError({'username':"user with this user name already exists"})
+            raise serializers.ValidationError({'user_exist':["user with this user name already exists"]})
         
         except Exception as ex:
-            raise serializers.ValidationError('cant completed this')
+            raise serializers.ValidationError({'unknown_error':['cant completed this']})
 
 
 class ChangePassword(APIView):
@@ -79,8 +79,10 @@ class CheckUser(APIView):
             user=CustomUser.objects.get(share_code=share_code)
         except CustomUser.DoesNotExist:
             raise NotFound(detail="Sorry not user with this user code exits")
+        except KeyError:
+            raise ParseError({"detail":"provide a user share_code"})
         
-        return Response({'status':'user exists'})
+        return Response({'status':'user exists','username':user.username})
 
 
 class AllAnonMessages(APIView):
@@ -91,3 +93,12 @@ class AllAnonMessages(APIView):
         messages=MessageSerializer(user.messages.all(),many=True)
 
         return Response({'messages':messages.data})
+
+
+class GetUser(APIView):
+    permission_classes=[IsAuthenticated,]
+    def post(self,request,*args, **kwargs):
+        user=request.user 
+        return Response({'user':[user.username,user.share_code]})
+
+        
